@@ -18,6 +18,12 @@ const User = bookshelf.Model.extend({
   comments: function() {
     return this.hasMany(Comments);
   },
+  followers: function() {
+    return this.belongsToMany(User, 'users_users', 'user_id', 'follower_id');
+  },
+  following: function() {
+    return this.belongsToMany(User, 'users_users', 'follower_id', 'user_id');
+  },
   encryptPassword:(model, attrs, options) => {
     return new Promise((resolve, reject) => {
       bcrypt.hash(model.attributes.password, 10, (err, hash) => {
@@ -36,7 +42,7 @@ const User = bookshelf.Model.extend({
         return resolve(res);
       });
     });
-  },
+  }
 });
 
 module.exports = bookshelf.model('User', User);
